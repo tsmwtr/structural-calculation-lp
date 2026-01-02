@@ -53,19 +53,56 @@ document.addEventListener('DOMContentLoaded', () => {
        ========================================= */
     const accordionHeaders = document.querySelectorAll('.accordion-header');
 
-    accordionHeaders.forEach(header => {
-        header.addEventListener('click', () => {
-            const contentId = header.getAttribute('aria-controls');
-            const content = document.getElementById(contentId);
+    // Helper to set height
+    const setAccordionHeight = (item, isExpanded) => {
+        const header = item.querySelector('.accordion-header');
+        // Initial set/recalc
+        if (isExpanded) {
+            item.style.height = item.scrollHeight + 'px';
+        } else {
+            item.style.height = header.offsetHeight + 'px';
+        }
+    };
+
+    // Initialize all items
+    const accordionItems = document.querySelectorAll('.accordion-item');
+    accordionItems.forEach(item => {
+        const header = item.querySelector('.accordion-header');
+        const isExpanded = header.getAttribute('aria-expanded') === 'true';
+        setAccordionHeight(item, isExpanded);
+    });
+
+    // Toggle logic (Clicking anywhere on item toggles it)
+    accordionItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+            const header = item.querySelector('.accordion-header');
             const isExpanded = header.getAttribute('aria-expanded') === 'true';
 
-            // Toggle accessibility state
+            // Toggle state
             header.setAttribute('aria-expanded', !isExpanded);
-            // content.hidden = isExpanded; // Removed for CSS animation
 
-            // Optional: Close others for cleaner UI?
-            // keeping multiple open allowed as per standard LP behavior often
+            // Animate height
+            setAccordionHeight(item, !isExpanded);
         });
+    });
+
+    // Resize handler to update heights
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            document.querySelectorAll('.accordion-item').forEach(item => {
+                const header = item.querySelector('.accordion-header');
+                const isExpanded = header.getAttribute('aria-expanded') === 'true';
+
+                // Temporarily unlock height to get real scrollHeight if needed, 
+                // but usually scrollHeight works if content didn't change.
+                // Resetting to auto briefly might be safer if content flow changed.
+                item.style.height = 'auto';
+                const newHeight = isExpanded ? item.scrollHeight : header.offsetHeight;
+                item.style.height = newHeight + 'px';
+            });
+        }, 100);
     });
 
     /* =========================================
@@ -123,5 +160,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }, fadeObserverOptions);
 
     fadeElements.forEach(el => fadeObserver.observe(el));
+
+    /* =========================================
+       File Size Validation (Max 20MB)
+       ========================================= */
+    const fileInput = document.getElementById('file');
+    if (fileInput) {
+        fileInput.addEventListener('change', function () {
+            const file = this.files[0];
+            const maxSize = 20 * 1024 * 1024; // 20MB
+            if (file && file.size > maxSize) {
+                alert('ファイルサイズが20MBを超えています。圧縮するか、分割して送信してください。');
+                this.value = ''; // Clear input
+            }
+        });
+    }
 
 }); // End DOMContentLoaded

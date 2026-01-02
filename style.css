@@ -18,6 +18,11 @@
     /* Functional variations using opacity */
     --c-text-body: #1a237e;
     --c-text-muted: rgba(26, 35, 126, 0.7);
+
+    /* Aliases for consistency */
+    --c-text: var(--c-text-body);
+    --c-text-light: var(--c-text-muted);
+    --c-primary: var(--c-blue);
     --c-border: rgba(26, 35, 126, 0.15);
     --c-bg-subtle: rgba(26, 35, 126, 0.03);
     --c-bg-hover: rgba(13, 71, 161, 0.04);
@@ -61,7 +66,8 @@ body {
     background-color: var(--c-white);
     line-height: var(--lh-body);
     -webkit-font-smoothing: antialiased;
-    word-break: break-all;
+    word-break: normal;
+    overflow-wrap: anywhere;
     /* Prevent overflow */
 }
 
@@ -637,6 +643,7 @@ p {
 }
 
 .card-accent {
+    position: relative;
     text-align: center;
     border-top: 4px solid var(--c-blue);
     display: flex;
@@ -790,6 +797,82 @@ p {
     color: var(--c-blue);
 }
 
+/* Missing Utility Mixins */
+.mt-4 {
+    margin-top: 2rem !important;
+}
+
+.mb-0 {
+    margin-bottom: 0 !important;
+}
+
+/* Missing List Styles */
+.list-bullet li,
+.list-bullet-sm li {
+    padding-left: 1.5rem;
+    position: relative;
+    margin-bottom: 0.5rem;
+}
+
+.list-bullet li::before,
+.list-bullet-sm li::before {
+    content: "";
+    /* Bullet style */
+    position: absolute;
+    left: 5px;
+    top: 10px;
+    width: 6px;
+    height: 6px;
+    background: var(--c-blue);
+    border-radius: 50%;
+}
+
+.list-bullet-sm li {
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+.list-ordered-highlight {
+    counter-reset: num;
+}
+
+.list-ordered-highlight li {
+    position: relative;
+    padding-left: 2rem;
+    margin-bottom: 0.8rem;
+    font-weight: 700;
+}
+
+.list-ordered-highlight li::before {
+    counter-increment: num;
+    content: counter(num) ".";
+    position: absolute;
+    left: 0;
+    color: var(--c-blue);
+    font-weight: 900;
+}
+
+/* Connector Line for Flow */
+.connector-line {
+    width: 2px;
+    height: 30px;
+    background: var(--c-border);
+    margin: 0 auto;
+}
+
+.offer-step {
+    text-align: center;
+    background: var(--c-bg-subtle);
+    padding: 20px;
+    border-radius: var(--r-base);
+    border: 1px solid var(--c-border);
+}
+
+.step-desc {
+    font-size: 0.9rem;
+    color: var(--c-text);
+}
+
 .card-alert {
     background: var(--c-bg-subtle);
     border: 1px solid var(--c-border);
@@ -926,42 +1009,25 @@ p {
 }
 
 .accordion-body {
-    display: grid;
-    grid-template-rows: 0fr;
-    height: 0;
+    display: block;
     margin: 0;
     padding: 0;
-    transition: grid-template-rows 0.3s ease-out, visibility 0.3s step-end, opacity 0.3s ease-out;
     background: transparent;
     border-top: 0;
-    overflow: hidden;
-    visibility: hidden;
-    opacity: 0;
+    opacity: 1;
+    /* Always visible per user request */
 }
 
 .accordion-header[aria-expanded="true"]+.accordion-body {
-    grid-template-rows: 1fr;
     height: auto;
     border-top: 1px solid var(--c-border);
-    visibility: visible;
-    opacity: 1;
     background: #fafbfc;
-    transition: grid-template-rows 0.3s ease-out, visibility 0s step-start, opacity 0.3s ease-out;
 }
 
 .accordion-content {
     min-height: 0;
     padding: 20px;
-    overflow: hidden;
-    /* Ensure content is clipped */
-    opacity: 0;
-    transform: translateY(-10px);
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
-}
-
-.accordion-header[aria-expanded="true"]+.accordion-body .accordion-content {
-    opacity: 1;
-    transform: translateY(0);
+    /* Removed transform/opacity transitions for simplicity */
 }
 
 /* Scroll Fade Animation */
@@ -998,13 +1064,7 @@ p {
     transition-delay: 0.5s;
 }
 
-.delay-200 {
-    transition-delay: 0.2s;
-}
-
-.delay-300 {
-    transition-delay: 0.3s;
-}
+/* Duplicates removed */
 
 /* =========================================
    5. Final CTA & Footer
@@ -1115,6 +1175,7 @@ textarea:focus {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    margin-bottom: 16px;
 }
 
 @media (min-width: 600px) {
@@ -1177,6 +1238,7 @@ textarea:focus {
 }
 
 /* Sticky CTA */
+/* Sticky CTA */
 .sticky-cta {
     position: fixed;
     bottom: 0;
@@ -1187,11 +1249,13 @@ textarea:focus {
     padding: 12px 20px;
     z-index: 2000;
     box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
-    transition: transform 0.3s ease;
+    transition: opacity 220ms ease, transform 220ms ease;
 }
 
 .sticky-cta.is-hidden {
+    opacity: 0;
     transform: translateY(100%);
+    pointer-events: none;
 }
 
 .sticky-container {
@@ -1432,6 +1496,12 @@ textarea:focus {
 
 /* ---------- Section titles: minimal gradient underline ---------- */
 .section-title::after {
+    content: "";
+    display: block;
+    width: 72px;
+    height: 4px;
+    margin: 16px auto 0;
+    border-radius: 999px;
     background: linear-gradient(90deg,
             rgba(13, 71, 161, 0.90),
             rgba(26, 35, 126, 0.90));
@@ -1439,7 +1509,8 @@ textarea:focus {
 
 /* ---------- Accordion: expanded state styling (ARIA-linked) ---------- */
 .accordion-item {
-    transition: box-shadow 180ms ease, border-color 180ms ease, transform 180ms ease;
+    transition: box-shadow 180ms ease, border-color 180ms ease, height 0.3s ease-out;
+    overflow: hidden;
 }
 
 .accordion-header {
@@ -1452,9 +1523,7 @@ textarea:focus {
             rgba(13, 71, 161, 0.02));
 }
 
-.accordion-header[aria-expanded="true"] .accordion-icon {
-    transform: rotate(180deg);
-}
+
 
 
 
@@ -1496,4 +1565,90 @@ textarea:focus {
     .btn-primary:hover::after {
         transform: rotate(18deg);
     }
+}
+
+/* Section Lead Text */
+.section-lead {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--c-text);
+    margin-top: 1.5rem;
+    margin-bottom: 3rem;
+    text-align: center;
+    font-weight: 500;
+}
+
+@media (min-width: 768px) {
+    .section-lead {
+        font-size: 1.25rem;
+        margin-top: 2rem;
+        margin-bottom: 4rem;
+    }
+}
+
+/* Solution Card Improvements */
+.card-icon-area {
+    font-size: 3rem;
+    font-weight: 700;
+    color: rgba(11, 42, 111, 0.1);
+    position: absolute;
+    top: 0;
+    right: 15px;
+    line-height: 1;
+}
+
+.card-subtitle {
+    display: block;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    font-weight: normal;
+    color: var(--c-text-light);
+}
+
+.card-benefit {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: 0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.benefit-label {
+    display: inline-block;
+    background: #eef2f6;
+    /* Very light blue */
+    color: var(--c-primary);
+    font-size: 0.75rem;
+    font-weight: bold;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    letter-spacing: 0.05em;
+}
+
+/* File Input Sytling */
+input[type="file"] {
+    padding: 10px;
+    background: #f8f9fa;
+    border: 1px dashed var(--c-border);
+    cursor: pointer;
+}
+
+input[type="file"]:hover {
+    background: #eef2f6;
+    border-color: var(--c-blue);
+}
+
+.form-help-text {
+    font-size: 0.8rem;
+    color: var(--c-text-muted);
+    margin-top: 5px;
+}
+
+/* Disclaimer Note */
+.disclaimer-note {
+    font-size: 0.75rem;
+    color: var(--c-text-muted);
+    margin-top: 10px;
+    line-height: 1.6;
 }
