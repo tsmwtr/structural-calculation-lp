@@ -60,6 +60,7 @@ html {
 
 body {
     margin: 0;
+    font-family: var(--f-base);
     color: var(--c-text-body);
     background-color: var(--c-white);
     line-height: var(--lh-body);
