@@ -60,8 +60,6 @@ html {
 
 body {
     margin: 0;
-    padding: 0;
-    font-family: var(--f-base);
     color: var(--c-text-body);
     background-color: var(--c-white);
     line-height: var(--lh-body);
@@ -303,10 +301,12 @@ p {
 }
 
 .header-logo {
-    font-size: 0.9rem;
+    font-size: 1.25rem;
     color: var(--c-navy);
     font-weight: 700;
     margin: 0;
+    font-family: 'IBM Plex Sans JP', sans-serif;
+    letter-spacing: 0.05em;
 }
 
 .header-nav {
@@ -363,6 +363,10 @@ p {
     .hero-section {
         padding-top: calc(var(--h-header) + 100px);
         padding-bottom: 120px;
+        /* overflow: hidden; Removed since we want bg to be inside but maybe overflow hidden is good? Orig had it? */
+        /* Checking original: It was not explicitly there in mobile, but in PC query it might have been implied or not? */
+        /* Actually, I will check 366-369. Original had overflow:hidden? Let's check logic. */
+        /* If bg is absolute and contained, overflow hidden on section is safe. */
     }
 }
 
@@ -960,6 +964,7 @@ p {
     border-radius: var(--r-base);
     margin-bottom: 16px;
     overflow: hidden;
+    font-size: 15px;
 }
 
 .accordion-header {
@@ -974,6 +979,7 @@ p {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    font-size: 15px;
 }
 
 .accordion-icon {
@@ -1376,6 +1382,8 @@ textarea:focus {
     overflow: hidden;
 }
 
+
+
 .hero-background {
     position: absolute;
     inset: 0;
@@ -1401,7 +1409,7 @@ textarea:focus {
     background: radial-gradient(circle at 30% 30%,
             rgba(13, 71, 161, 0.16),
             rgba(13, 71, 161, 0.00) 65%);
-    animation: heroDriftA 18s ease-in-out infinite alternate;
+    animation: heroBreathA 24s ease-in-out infinite alternate;
 }
 
 .hero-background::after {
@@ -1410,28 +1418,35 @@ textarea:focus {
     background: radial-gradient(circle at 60% 40%,
             rgba(26, 35, 126, 0.14),
             rgba(26, 35, 126, 0.00) 66%);
-    animation: heroDriftB 22s ease-in-out infinite alternate;
+    animation: heroBreathB 30s ease-in-out infinite alternate;
 }
 
-@keyframes heroDriftA {
+@keyframes heroBreathA {
     0% {
-        transform: translate3d(0, 0, 0) scale(1);
+        opacity: 0.8;
+        transform: scale(1);
     }
 
     100% {
-        transform: translate3d(-18px, 26px, 0) scale(1.02);
+        opacity: 1;
+        transform: scale(1.05);
+        /* Very subtle expansion */
     }
 }
 
-@keyframes heroDriftB {
+@keyframes heroBreathB {
     0% {
-        transform: translate3d(0, 0, 0) scale(1);
+        opacity: 0.9;
+        transform: scale(1);
     }
 
     100% {
-        transform: translate3d(22px, -18px, 0) scale(1.03);
+        opacity: 0.7;
+        transform: scale(1.03);
     }
 }
+
+
 
 /* Ensure hero content stays above moving background */
 .hero-container {
@@ -1651,4 +1666,22 @@ input[type="file"]:hover {
     color: var(--c-text-muted);
     margin-top: 10px;
     line-height: 1.6;
+}
+
+@media (max-width: 425px) {
+    .section-tag {
+        display: block;
+        margin-bottom: 8px;
+    }
+}
+
+/* Break only on very small screens (<=425px) */
+.break-micro {
+    display: none;
+}
+
+@media (max-width: 425px) {
+    .break-micro {
+        display: block;
+    }
 }
