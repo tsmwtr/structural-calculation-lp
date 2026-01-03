@@ -734,6 +734,30 @@ p {
     color: var(--c-navy);
 }
 
+/* Fit Section */
+.section-fit .fit-grid {
+    margin-top: 22px;
+}
+
+.section-fit .fit-note {
+    margin-top: 12px;
+    font-size: 0.9em;
+    color: var(--c-text-muted);
+    line-height: 1.7;
+}
+
+.card-fit-good,
+.card-fit-bad {
+    border: 1px solid rgba(255, 255, 255, 0.10);
+}
+
+.section-position .position-note {
+    margin-top: 12px;
+    font-size: 0.9em;
+    color: var(--c-text-muted);
+    line-height: 1.7;
+}
+
 /* Timeline */
 .timeline {
     border-left: 2px solid var(--c-border);
